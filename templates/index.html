@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customer_list.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/">Accueil</a></li>
+            <li class="nav-item"><a href="/create_customer">Créer un client</a></li>
+            <li class="nav-item"><a href="/help">Aide</a></li>
+        </ul>
+    </nav>
+
+    <h1>Liste des clients</h1>
+    <table>
+        <thead>
+            <tr>
+                <!-- <th>ID</th> -->
+                <th>Nom</th>
+                <th>Prénom </th>
+                <th>E-mail </th>
+                <th>Téléphone </th>
+                <th>Adresse </th>
+                <th>Genre </th>
+                <!-- <th>Age </th> 
+                <th>Date d'enregistrement </th> 
+                <th>Commande </th> 
+                <th>Spent </th> 
+                <th>Emploi </th> 
+                <th>Hobbies </th> 
+                <th>Situation matrimoniale </th> -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <!-- <td>{{ customer.id }}</td> -->
+                <td>{{ customer.first_name }}</td>
+                <td>{{ customer.last_name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.gender }}</td>
+                <!-- <td>{{ customer.age }}</td>
+                <td>{{ customer.registered }}</td>
+                <td>{{ customer.orders }}</td>
+                <td>{{ customer.spent }}</td>
+                <td>{{ customer.job }}</td>
+                <td>{{ customer.hobbies }}</td>
+                <td>{{ customer.is_married }}</td> -->
+
+                <td>
+                    <form action="/del_customer/{{ customer.id }}" method="post">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button style="color: white; background-color: red;" type="submit">Supprimer</button>
+                    </form>
+
+                    <form action="/customer/{{ customer.id }}" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button style="color: white; background-color: green;" type="submit">Détails</button>
+                    </form>
+
+                    <form action="/customer_modify/{{ customer.id }}" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button style="color: white; background-color: green;" type="submit">Modifier</button>
+                    </form>
+                </td>
+
+                <!-- 
+
+                <td>
+                    <form action="/edit_patch/{{ customer.id }}" method="post">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <input type="text" name="customer_patch">
+                        <button style="color: white; background-color: blue;" type="submit">Modification partielle</button>
+                    </form>
+                </td> -->
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="get">
+        <label for="per_page">Rows per page:</label>
+        <select id="per_page" name="per_page" onchange="this.form.submit()">
+            <option value="10" {% if per_page==10 %}selected{% endif %}>10</option>
+            <option value="20" {% if per_page==20 %}selected{% endif %}>20</option>
+            <option value="50" {% if per_page==50 %}selected{% endif %}>50</option>
+            <option value="100" {% if per_page==100 %}selected{% endif %}>100</option>
+        </select>
+    </form>
+
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('list_customers', page=page-1, per_page=per_page) }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %} <a href="{{ url_for('list_customers', page=page+1, per_page=per_page) }}">Next</a>
+            {% endif %}
+    </div>
+
+
+
+</body>
+
+</html>

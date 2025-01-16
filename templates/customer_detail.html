@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customer_detail.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/">Accueil</a></li>
+            <li class="nav-item"><a href="/create_customer">Créer un client</a></li>
+            <li class="nav-item"><a href="/help">Aide</a></li>
+        </ul>
+    </nav>
+
+    
+    <div class="container">
+        <h1>Information détaillée sur le client dont l'identifiant est : {{ customer.id}}</h1>
+        <div class="customer-info">
+            <p><strong>Nom :</strong> {{ customer.first_name }}</p>
+            <p><strong>Prénom :</strong> {{ customer.last_name }}</p>
+            <p><strong>E-mail :</strong> {{ customer.email }}</p>
+            <p><strong>Téléphone :</strong> {{ customer.phone }}</p>
+            <p><strong>Adresse :</strong> {{ customer.address }}</p>
+            <p><strong>Genre :</strong> {{ customer.gender }}</p>
+            <p><strong>Age :</strong> {{ customer.age }}</p>
+            <p><strong>Date d'enregistrement :</strong> {{ customer.registered }}</p>
+            <p><strong>Commandes :</strong> {{ customer.orders }}</p>
+            <p><strong>Montant total:</strong> ${{ customer.spent }}</p>
+            <p><strong>Emploi :</strong> {{ customer.job }}</p>
+            <p><strong>Hobbies:</strong> {{ customer.hobbies }}</p>
+            <p><strong>Situation matrimoniale :</strong> {{ 'Oui' if customer.is_married else 'Non' }}</p>
+        </div>
+    </div>
+</body>
+</html>

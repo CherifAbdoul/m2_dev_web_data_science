@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Customer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customer_modify.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/">Accueil</a></li>
+            <li class="nav-item"><a href="/create_customer">Créer un client</a></li>
+            <li class="nav-item"><a href="/help">Aide</a></li>
+        </ul>
+    </nav>
+
+
+    <div class="container">
+        <h1>Edit Customer Information</h1>
+        
+        
+        <form method="POST" action="{{ url_for('edit_customer', customer_id=customer.id) }}" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+
+            <label for="first_name">Nom :</label>
+            <input type="text" id="first_name" name="first_name" value="{{ customer.first_name }}" required>
+
+            <label for="last_name">Prénom :</label>
+            <input type="text" id="last_name" name="last_name" value="{{ customer.last_name }}" required>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" value="{{ customer.email }}" required>
+
+            <label for="phone">Téléphone:</label>
+            <input type="text" id="phone" name="phone" value="{{ customer.phone }}" required>
+
+            <label for="address">Adresse:</label>
+            <input type="text" id="address" name="address" value="{{ customer.address }}" required>
+
+            <label for="gender">Genre:</label>
+            <select id="gender" name="gender" required>
+                <option value="Male" {% if customer.gender == 'Male' %}selected{% endif %}>Homme</option>
+                <option value="Female" {% if customer.gender == 'Female' %}selected{% endif %}>Femme</option>
+            </select>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="{{ customer.age }}" required>
+
+            <label for="registered">Date d'enregistrement:</label>
+            <input type="datetime" id="registered" name="registered" value="{{ customer.registered }}" required>
+
+            <label for="orders">N° de commande:</label>
+            <input type="number" id="orders" name="orders" value="{{ customer.orders }}" required>
+
+            <label for="spent">Montant total:</label>
+            <input type="number" step="0.01" id="spent" name="spent" value="{{ customer.spent }}" required>
+
+            <label for="job">Emploi:</label>
+            <input type="text" id="job" name="job" value="{{ customer.job }}" required>
+
+            <label for="hobbies">Hobbies:</label>
+            <input type="text" id="hobbies" name="hobbies" value="{{ customer.hobbies }}" required>
+
+            <label for="is_married">Situation matrimoniale:</label>
+            <input type="checkbox" id="is_married" name="is_married" {% if customer.is_married %}checked{% endif %}>
+
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
+</body>
+</html>
