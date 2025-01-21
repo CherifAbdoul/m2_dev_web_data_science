@@ -1,10 +1,30 @@
-SELECT * FROM customers.client;
-
 create database customers_base;
 use customers_base;
 
-drop table if exists california_housing;
+show create table customers;
 
+CREATE TABLE `customers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `first_name` text COLLATE latin1_general_ci,
+  `last_name` text COLLATE latin1_general_ci,
+  `email` text COLLATE latin1_general_ci,
+  `phone` text COLLATE latin1_general_ci,
+  `address` text COLLATE latin1_general_ci,
+  `gender` text COLLATE latin1_general_ci,
+  `age` int DEFAULT NULL,
+  `registered` datetime DEFAULT NULL,
+  `orders` int DEFAULT NULL,
+  `spent` double DEFAULT NULL,
+  `job` text COLLATE latin1_general_ci,
+  `hobbies` text COLLATE latin1_general_ci,
+  `is_married` text COLLATE latin1_general_ci,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+
+
+drop table if exists california_housing;
 create table if not exists california_housing(
 id int auto_increment primary key,
 med_inc double,
