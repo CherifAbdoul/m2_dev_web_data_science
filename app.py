@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 import pymysql
+import pickle
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -24,7 +26,8 @@ def get_db():
         cursorclass=pymysql.cursors.DictCursor
     )
 
-    """Récupérer touted les informations du client
+
+"""Récupérer touted les informations du client
     Returns:
         _type_: _description_
     """
@@ -40,16 +43,21 @@ def list_customers():
     customers = cur.fetchall()
 
     # Compter le nombre total de lignes
-    cur.execute("SELECT COUNT(*) FROM customers")
-    total_customers = 1000 #cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) as nb FROM customers")
+    # total_customers = 1000 #cur.fetchone()[0]
     
+    result = cur.fetchone()
+    
+    total_customers = 1
+    if result is not None:
+        total_customers = result['nb']
+
     total_pages = (total_customers // per_page) + (total_customers % per_page > 0)
     
     return render_template('index.html', customers=customers, page=page, per_page=per_page, total_pages=total_pages)
 
 
-
-    """création d'un nouveau client
+"""création d'un nouveau client
     Returns:
         _type_: _description_
     """
@@ -90,6 +98,91 @@ def create_customer():
     return render_template('customer_create_form.html')
 
 
+
+@app.route('/housing_list', methods=['GET'])
+def housing_list():
+    per_page = int(request.args.get('per_page', 10))
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
+    
+    # Récupération d'une connexion à la base de données && Création d'un curseur pour exécuter des requêtes SQL
+    cur = get_db().cursor()
+    cur.execute(f"SELECT * FROM california_housing LIMIT {offset}, {per_page}")
+    california_housing = cur.fetchall()
+
+    # Compter le nombre total de lignes
+    cur.execute("SELECT COUNT(*) as nb FROM california_housing")
+    
+    result = cur.fetchone()
+    
+    total_california_housing = 1
+    if result is not None:
+        total_california_housing = result['nb']
+
+    total_pages = (total_california_housing // per_page) + (total_california_housing % per_page > 0)
+    
+    return render_template('california_housing.html', california_housing=california_housing, page=page, per_page=per_page, total_pages=total_pages)
+
+
+
+@app.route('/model', methods=['GET', 'POST'])
+def modele_page(): 
+    if request.method == 'POST':
+        # Handle form submission
+        data = {
+            'MedInc': request.form['med_inc'],
+            'HouseAge': request.form['house_age'],
+            'AveRooms': request.form['ave_rooms'],
+            'AveBedrms': request.form['ave_bed_rms'],
+            'Population': request.form['population'],
+            'AveOccup': request.form['ave_occupation'],
+            'Latitude': request.form['latitude'],
+            'Longitude': request.form['longitude']
+        }
+        
+        # 'price': request.form['price']
+        # price = request.form['price']
+        
+        print(data)
+        
+        df_mydata = pd.DataFrame.from_dict(data, orient='index').T
+        
+        #read the model file with PICKLE
+        with open('model/price_predict.pkl', 'rb') as fichier:
+            model_loader = pickle.load(fichier)
+        
+        # Used the model for price prediction
+        price_predict = model_loader.predict(df_mydata)
+        
+        data['price'] = request.form['price']
+        data['price_predict'] = price_predict[0]
+        
+        cur = get_db().cursor()
+        
+        if request.form.get('_method') == 'PUT':
+            print(" sql update")
+            id_housing = request.form['id']
+            print(f""" id_housing : {id} """)
+            cur.execute(""" UPDATE california_housing SET price_predict=%s WHERE id=%s """, (price_predict[0], id_housing))
+            
+        else:
+            print(" sql insert")
+            sql = """ INSERT INTO california_housing SET (med_inc, house_age, ave_rooms, ave_bed_rms, population, ave_occupation, latitude, longitude, price, price_predict)
+                        VALUES (%(MedInc)s, %(HouseAge)s, %(AveRooms)s, %(AveBedrms)s, %(Population)s, %(AveOccup)s, %(Latitude)s, %(Longitude)s, %(price)s, %(price_predict)s)
+                """
+    
+            # Exécution de la requête
+            cur.execute(sql, data)
+            
+        
+        # mysql.connection.commit()
+        cur.connection.commit()
+        cur.close()
+        # Do something with customer_data (e.g., save to a database)
+        return redirect(url_for('modele_page'))
+    return render_template('model_form.html')
+
+
 @app.route('/edit_customer/<int:customer_id>', methods=['GET', 'POST'])
 def edit_customer(customer_id):
     #if request.form.get('_method') == 'PUT':
@@ -111,11 +204,10 @@ def edit_customer(customer_id):
 
         cur = get_db().cursor()
         cur.execute("""
-            UPDATE customers 
-            SET first_name=%s, last_name=%s, email=%s, phone=%s, address=%s, gender=%s, age=%s, registered=%s, 
+            UPDATE customers SET first_name=%s, last_name=%s, email=%s, phone=%s, address=%s, gender=%s, age=%s, registered=%s, 
                 orders=%s, spent=%s, job=%s, hobbies=%s, is_married=%s
-            WHERE id=%s
-        """, (first_name, last_name, email, phone, address, gender, age, registered, orders, spent, job, hobbies, is_married, customer_id))
+            WHERE id=%s """, 
+            (first_name, last_name, email, phone, address, gender, age, registered, orders, spent, job, hobbies, is_married, customer_id))
         cur.connection.commit()
         cur.close()
         #flash('Customer Updated Successfully!')
@@ -195,4 +287,4 @@ def partially_update_customer(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5050)

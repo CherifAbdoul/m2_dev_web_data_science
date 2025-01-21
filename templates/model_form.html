@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='model.css') }}">
+    <title>Créer un nouveau client</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/">Accueil</a></li>
+            <li class="nav-item"><a href="/create_customer">Créer un client</a></li>
+            <li class="nav-item"><a href="/model">Modèle</a></li>
+            <li class="nav-item"><a href="/housing_list">Modèle Liste</a></li>
+            <li class="nav-item"><a href="/help">Aide</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <div class="container">
+            <div class="form-container"><br><br>
+                <h2>Prédire le prix d'un Bien</h2>
+                <form action="{{ url_for('modele_page') }}" method="post">
+    
+                    <div>
+                        <label for="med_inc">Revenu médian :</label>
+                        <input type="text" id="med_inc" name="med_inc" required>
+                    </div>
+                    <div>
+                        <label for="house_age">Age médian de la maison :</label>
+                        <input type="text" id="house_age" name="house_age" required>
+                    </div>
+
+                    <div>
+                        <label for="ave_rooms">Nombre moyen de pièces par ménage :</label>
+                        <input type="text" id="ave_rooms" name="ave_rooms" required>
+                    </div>
+                    <div>
+                        <label for="ave_bed_rms">Nombre moyen de chambres à coucher par ménage :</label>
+                        <input type="text" id="ave_bed_rms" name="ave_bed_rms" required>
+                    </div>
+    
+                    <div>
+                        <label for="population">Population :</label>
+                        <input type="text" id="population" name="population">
+                    </div>
+
+                    <div>
+                        <label for="ave_occupation">Nombre moyen de membres du ménage :</label>
+                        <input type="text" id="ave_occupation" name="ave_occupation" min="0">
+                    </div>
+    
+                    <div>
+                        <label for="latitude">Latitude :</label>
+                        <input type="text" id="latitude" name="latitude">
+                    </div>
+                    <div>
+                        <label for="longitude">Longitude :</label>
+                        <input type="text" id="longitude" name="longitude" min="0">
+                    </div>
+
+                    <div>
+                        <label for="price">Prix :</label>
+                        <input type="text" id="price" name="price" min="0">
+                    </div>
+    
+                    <button type="submit">Soumettre</button>
+                </form>
+            </div>
+    
+        </div>
+        
+    </div>
+
+</body>
+
+</html>

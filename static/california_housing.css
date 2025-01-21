@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-item {
+    margin: 0;
+}
+
+.nav-item a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    background-color: #575757;
+    color: white;
+}
+
+
+
+.container {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+h1 {
+    text-align: center;
+    color: #333333;
+}
+
+.customer-info {
+    margin-top: 20px;
+}
+
+.customer-info p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.customer-info p strong {
+    color: #555555;
+}

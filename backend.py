@@ -7,7 +7,7 @@ backend = Flask(__name__)
 backend.config['MYSQL_HOST'] = 'localhost'
 backend.config['MYSQL_USER'] = 'root'  # Utilisateur MySQL
 backend.config['MYSQL_PASSWORD'] = 'rootroot'  # Mot de passe MySQL
-backend.config['MYSQL_DB'] = 'todo_list'  # Base de données MySQL
+backend.config['MYSQL_DB'] = 'customers'  # Base de données MySQL
 
 methods=['POST', 'PUT', 'GET', 'PATCH', 'DELETE']
 
@@ -24,23 +24,23 @@ def get_db():
 def index():
     # Récupération d'une connexion à la base de données && Création d'un curseur pour exécuter des requêtes SQL
     cur = get_db().cursor()
-    cur.execute("SELECT * FROM tasks")
+    cur.execute("SELECT * FROM reportings")
     cur.connection.commit()
-    tasks = cur.fetchall()
+    reportings = cur.fetchall()
     cur.close()
-    #return render_template('index.html', tasks=tasks)
-    return jsonify(tasks)
+    #return render_template('index.html', reportings=reportings)
+    return jsonify(reportings)
 
 # Route pour obtenir une tâche par son ID (GET)
 @backend.route('/data/<int:id>', methods=methods)
 def get_task(id):
     cur = get_db().cursor()
-    cur.execute("SELECT * FROM tasks WHERE id = %s", (id,))
-    task = cur.fetchone()
+    cur.execute("SELECT * FROM reportings WHERE id = %s", (id,))
+    reporting = cur.fetchone()
     cur.close()
-    if task:
-        # return render_template('index.html', task=task)
-        return jsonify(task)
+    if reporting:
+        # return render_template('index.html', reporting=reporting)
+        return jsonify(reporting)
     else:
         return jsonify({'message': 'Tâche non trouvée'}), 404
     
@@ -55,7 +55,6 @@ def update_task(id):
         cur.execute("UPDATE tasks SET task=%s WHERE id=%s", (task, id))
         cur.connection.commit()
         cur.close()
-    #return redirect(url_for('index'))
     #return jsonify({'error': 'Tache non trouvee'}), 404  # Retourner une réponse JSON d'erreur si la tâche n'est pas trouvée
     return jsonify({'message': 'La mise à jour a été effectuée avec succès'}), 200
 
