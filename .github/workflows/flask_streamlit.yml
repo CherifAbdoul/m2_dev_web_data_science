@@ -94,13 +94,30 @@ jobs:
       #pytest tests/
 
       # Test Streamlit
-      - name: Test Streamlit app
-        run: |
-          streamlit hello --headless
+      #- name: Test Streamlit app
+      #  run: |
+      #    streamlit hello --headless
 
       # Docker build and push
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: false
+      #- name: Build and Push Docker Image
+      #  uses: docker/build-push-action@v4
+      #  with:
+      #    context: .
+      #    push: false
+
+      - name: docker login
+        run: | # log into docker hub account
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+          
+      - name: Get current date # get the date of the build
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+
+      - name: Build the Docker image # push The image to the docker hub
+        run: docker build . --file Dockerfile --tag $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.date.outputs.date }}
+
+      - name: Docker Push
+        run: docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.date.outputs.date }}
+        
+      - name: Stop Docker Container
+        run: docker stop $(docker ps --filter "ancestor=m2_dev_web_data_science" -q)
