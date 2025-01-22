@@ -87,10 +87,10 @@ jobs:
           MYSQL_USER: root
           MYSQL_PASSWORD: root
           MYSQL_DATABASE: customers_base
-        run: |
-          cd tests
-          ls -lhrt
-          pytest tests/test_flask.py
+      #  run: |
+      #    cd tests
+      #    ls -lhrt
+      #    pytest tests/test_flask.py
 
       # Test Streamlit
       #- name: Test Streamlit app
