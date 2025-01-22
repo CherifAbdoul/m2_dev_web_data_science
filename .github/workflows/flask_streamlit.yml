@@ -90,8 +90,7 @@ jobs:
         run: |
           cd tests
           ls -lhrt
-        
-      #pytest tests/
+          pytest tests/test_flask.py
 
       # Test Streamlit
       #- name: Test Streamlit app
