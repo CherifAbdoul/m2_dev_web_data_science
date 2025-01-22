@@ -4,7 +4,8 @@ env:
   DOCKER_USER: ${{secrets.USER_NAME}}
   DOCKER_PASSWORD: ${{secrets.PASSWORD}}
   DOCKER_REPO_NAME: ${{secrets.REPOSITORY_DOCKER_HUB}}
-  MON_TEST: ${{secrets.MON_TEST_PWD}}
+  MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME}}
+  MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
 
 
 on:
@@ -25,12 +26,12 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: root
+          MYSQL_ROOT_PASSWORD: $MYSQL_USERNAME
+          MYSQL_DATABASE: $MYSQL_PASSWORD
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u $MYSQL_USERNAME -p $MYSQL_PASSWORD"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3

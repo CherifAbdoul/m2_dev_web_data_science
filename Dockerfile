@@ -17,4 +17,4 @@ EXPOSE 5000
 EXPOSE 8501
 
 # Start both Flask and Streamlit applications
-CMD ["bash", "-c", "flask run --host=0.0.0.0 & streamlit run app.py --server.port=8501 --server.enableCORS false"]
+CMD ["bash", "-c", "flask run backend.py & streamlit run frontend.py --server.port=8501 --server.enableCORS false"]
