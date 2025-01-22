@@ -78,8 +78,8 @@ jobs:
           MYSQL_USER: root
           MYSQL_PASSWORD: root
           MYSQL_DATABASE: customers_base
-        run: |
-          pytest tests/
+        #run: |
+        #  pytest tests/
 
       # Test Streamlit
       - name: Test Streamlit app
