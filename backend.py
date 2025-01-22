@@ -24,7 +24,7 @@ def get_db():
 def index():
     # Récupération d'une connexion à la base de données && Création d'un curseur pour exécuter des requêtes SQL
     cur = get_db().cursor()
-    cur.execute("SELECT * FROM reportings")
+    cur.execute("SELECT id, type_bien, pieces, region, nb_vente, ca_vente, semaine, substr(mois, 1, 7) as mois FROM reportings")
     cur.connection.commit()
     reportings = cur.fetchall()
     cur.close()
