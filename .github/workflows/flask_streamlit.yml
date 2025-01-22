@@ -44,19 +44,19 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        run: docker build . -t m2_dev_web_data_science
+        run: docker build . -t dev_web_data_science
 
       - name: List of Docker images
         run: docker image ls
 
       - name: Run Docker Container
-        run: docker run -d -p 5000:5000 m2_dev_web_data_science
+        run: docker run -d -p 5000:5000 dev_web_data_science
 
       - name: List of Docker -a AFTER
         run: docker ps -a  
 
       - name: List of Docker -q AFTER
-        run: docker ps --filter "ancestor=m2_dev_web_data_science" -q
+        run: docker ps --filter "ancestor=dev_web_data_science" -q
 
       # Set up Python
       - name: Set up Python
@@ -119,4 +119,4 @@ jobs:
         run: docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.date.outputs.date }}
         
       - name: Stop Docker Container
-        run: docker stop $(docker ps --filter "ancestor=m2_dev_web_data_science" -q)
+        run: docker stop $(docker ps --filter "ancestor=dev_web_data_science" -q)
